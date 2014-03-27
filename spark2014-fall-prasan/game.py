@@ -11,46 +11,42 @@ def convert_to_screen_space(x, y):
 
 pygame.init()
 screen = pygame.display.set_mode((800,600))
-background = pygame.image.load("grid.png")
-kevin = pygame.image.load("kevin.jpg")
+background = pygame.image.load("court.jpg")
+kevin = pygame.image.load("kobe.jpg")
+kobejumping = pygame.image.load("kobejumping.jpg")
 zombie = pygame.image.load("zombie.gif")
 gameover = pygame.image.load("gameOver.jpg")
 
 alive = True
+jumping = False
+backDown = False
 x = 0
-y = 0
-
-zombieX = 0
-zombieY = 5
+y = 5
 
 while (alive == True):
     screen.blit(background, (0,0))
-    screen.blit(background, (600,0))
-    screen.blit(background, (0, 300))
-    screen.blit(background, (600, 300))
 
-    screen.blit(kevin, convert_to_screen_space(x,y))
-    screen.blit(zombie, convert_to_screen_space(zombieX, zombieY))
-
-    # this is where we check if the zombie and kevin are in the same
-    # place
-    if (x == zombieX) and (y == zombieY):
-        screen.blit(gameover, (0,0))
-        alive = False
-        pygame.display.flip()
-        time.sleep(3.0)
-
-    pygame.display.flip()
-    time.sleep(1.0)
+    if jumping == True:
+        screen.blit(kobejumping, convert_to_screen_space(x,y))
+    else:
+        screen.blit(kevin, convert_to_screen_space(x,y))
     
-    if y > zombieY:
-        zombieY += 1
-    elif y < zombieY:
-        zombieY -= 1
-    if x > zombieX:
-        zombieX += 1
-    elif x < zombieX:
-        zombieX -= 1
+    
+    pygame.display.flip()
+    time.sleep(0.1)
+
+
+    if backDown == True:
+        y = y + 1
+        if y == 5:
+            backDown = False
+
+    if jumping == True:
+        y = y-1
+        if y == 3:
+            jumping = False
+            backDown = True
+
 
     for event in pygame.event.get():
         if event.type == KEYDOWN:
@@ -60,9 +56,9 @@ while (alive == True):
             elif event.key == K_RIGHT:
                 if x < 7:
                     x = x + 1
-            elif event.key == K_DOWN:
-                if y < 5:
-                    y = y + 1
             elif event.key == K_UP:
-                if y > 0:
+                if y == 5:
                     y = y -1 
+                    jumping = True
+            elif event.key == K_BACKSPACE:
+                alive = False
