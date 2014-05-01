@@ -19,6 +19,15 @@ gameover = pygame.image.load("gameOver.jpg")
 hoop=pygame.image.load("hoop.jpg")
 durant=pygame.image.load("durant.jpg")
 lebron=pygame.image.load ("lebron.jpg")
+
+game_background_sound = pygame.mixer.Sound("dribble.wav")
+blocked = pygame.mixer.Sound("blocked.wav")
+swoosh = pygame.mixer.Sound("swoosh.wav")
+
+swoosh.set_volume(10.6)
+game_background_sound.set_volume(0.8)
+game_background_sound.play(loops=-1)
+
 alive = True
 jumping = False
 backDown = False
@@ -41,7 +50,8 @@ while (alive == True):
     screen.blit(durant,convert_to_screen_space(durantx,duranty))
     screen.blit(lebron,convert_to_screen_space(lebronx,lebrony))
     if (x==7) and (y==3) :
-       score= score+1
+       score = score+1
+       swoosh.play()
        x=0
        y=5
        jumping = False
@@ -53,6 +63,7 @@ while (alive == True):
        jumping = False
        backDown = False
        score = score - 1
+       blocked.play()
 
     duranty=duranty-0.5
     if duranty== 0:
